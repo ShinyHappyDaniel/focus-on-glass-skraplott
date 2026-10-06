@@ -146,6 +146,29 @@
     ctx.fillStyle = vg; ctx.fillRect(0, 0, W, H);
   }
 
+  // Safari ignores ctx.filter silently, so test it once and fall back to a shadow blur (works everywhere)
+  const FILTER_OK = (() => {
+    try {
+      const t = document.createElement('canvas'); t.width = t.height = 9;
+      const x = t.getContext('2d'); x.filter = 'blur(2px)'; x.fillStyle = '#fff'; x.fillRect(4, 4, 1, 1);
+      return x.getImageData(1, 4, 1, 1).data[3] > 0;
+    } catch (e) { return false; }
+  })();
+  if (/[?&]nofilter\b/.test(location.search)) window.__forceNoFilter = true;
+  // text with gaussian blur sigma (in canvas pixels): filter where supported, otherwise the text is drawn
+  // off to the left and only its blurred shadow is shifted back into place
+  function blurText(x, txt, tx, ty, sigma, dpr) {
+    if (sigma <= .25) { x.fillText(txt, tx, ty); return; }
+    if (FILTER_OK && !window.__forceNoFilter) {
+      x.filter = `blur(${sigma.toFixed(1)}px)`; x.fillText(txt, tx, ty); x.filter = 'none'; return;
+    }
+    const off = 100000;
+    x.save();
+    x.shadowColor = x.fillStyle; x.shadowBlur = sigma * 2; x.shadowOffsetX = off * dpr; x.shadowOffsetY = 0;
+    x.fillText(txt, tx - off, ty);
+    x.restore();
+  }
+
   // pre-blurred number sprites, so the background costs one drawImage per number per frame
   const sprites = new Map();
   function sprite(no, px) {
@@ -157,7 +180,7 @@
       const x = c.getContext('2d'); x.font = `${px}px ${FONT}`;
       c.width = Math.ceil(x.measureText(no).width) + pad * 2; c.height = Math.ceil(px * 1.3) + pad * 2;
       const y = c.getContext('2d'); y.font = `${px}px ${FONT}`; y.textAlign = 'center'; y.textBaseline = 'middle';
-      y.filter = 'blur(6px)'; y.fillStyle = '#fff'; y.fillText(no, c.width / 2, c.height / 2);
+      y.fillStyle = '#fff'; blurText(y, no, c.width / 2, c.height / 2, 6, 1);
       sprites.set(key, c);
     }
     return c;
@@ -242,11 +265,10 @@
 
     // --- centre number ---
     if (centerNo && numAlpha > 0) {
-      ctx.filter = blur > .25 ? `blur(${blur.toFixed(1)}px)` : 'none';
       ctx.globalAlpha = numAlpha;
       ctx.fillStyle = '#ffffff'; ctx.font = `${Math.round(m * .2)}px ${FONT}`;
-      ctx.fillText(centerNo, cx, cy + m * .01);
-      ctx.filter = 'none'; ctx.globalAlpha = 1;
+      blurText(ctx, centerNo, cx, cy + m * .01, blur, dpr);
+      ctx.globalAlpha = 1;
     }
 
     // --- iris ---
