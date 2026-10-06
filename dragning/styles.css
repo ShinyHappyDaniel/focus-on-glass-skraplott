@@ -26,9 +26,9 @@ canvas.view { position: absolute; left: 0; top: 0; width: 100%; height: calc(100
 
 .caption { position: absolute; left: 0; right: 0; bottom: calc(var(--band-h) + 26px); text-align: center; pointer-events: none; opacity: 0; transform: translateY(10px); transition: opacity .5s, transform .5s; z-index: 2; padding-inline: 16px; }
 .caption.show { opacity: 1; transform: none; }
-.caption .tag { display: inline-block; margin-bottom: 10px; font-family: var(--display); font-size: clamp(13px, 1.5vw, 18px); padding: .3em .7em; background: var(--red); color: #000; }
-.caption .who { font-family: var(--display); font-size: clamp(30px, 4.6vw, 64px); line-height: 1.05; text-wrap: balance; }
-.caption .where { margin-top: 4px; font-size: clamp(13px, 1.4vw, 18px); color: var(--ink-muted); }
+.caption .tag { display: inline-block; margin-top: 12px; font-family: var(--display); font-size: clamp(13px, 1.5vw, 18px); padding: .3em .7em; background: var(--red); color: #000; }
+.caption .who { font-family: var(--display); font-size: clamp(44px, min(7vw, 9.6vh), 120px); line-height: 1; text-wrap: balance; }
+.caption .where { margin-top: 8px; font-size: clamp(13px, 1.4vw, 18px); color: var(--ink-muted); }
 
 .controls { position: absolute; right: 28px; top: calc(env(safe-area-inset-top, 0px) + 26px); display: flex; gap: 22px; z-index: 3; flex-wrap: wrap; justify-content: flex-end; max-width: 40vw; }
 .controls button {
