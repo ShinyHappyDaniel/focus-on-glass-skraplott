@@ -62,8 +62,10 @@ canvas.view { position: absolute; left: 0; top: 0; width: 100%; height: calc(100
 @media (max-width: 640px) {
   .controls { top: auto; right: 16px; left: 16px; bottom: calc(var(--band-h) + 18px); justify-content: center; max-width: none; gap: 18px; }
   .caption, .idle { bottom: calc(var(--band-h) + 56px); }
-  .band { grid-template-columns: repeat(2, minmax(0, 1fr)); grid-auto-rows: 1fr; --band-h: 150px; height: 150px; padding-block: 6px; }
-  :root { --band-h: 150px; }
+  .band { grid-template-columns: repeat(2, minmax(0, 1fr)); grid-auto-rows: 1fr; --band-h: 184px; height: 184px; padding-block: 8px; }
+  :root { --band-h: 184px; }
+  .w { gap: 2px; padding-block: 4px; }
+  .w .st { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .w { padding: 0 10px; border-left: 0; }
 }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
