@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Focus on Glass – Lottery ticket</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fjalla+One&family=Noto+Sans:wght@400;700&display=swap">
+<link rel="stylesheet" href="styles.css?v=1">
+</head>
+<body>
+<canvas id="fx" aria-hidden="true"></canvas>
+<main class="stage">
+  <div class="ticket-wrap">
+  <article class="ticket" id="ticket" aria-label="Digital skraplott">
+    <div class="main">
+      <div class="top">
+        <img class="ff" src="assets/fujifilm-logo-white-red.svg" alt="FUJIFILM">
+      </div>
+
+      <img class="fog" src="assets/focus-on-glass-white.svg" alt="Focus on Glass">
+
+      <div class="intro">
+        <h1>Tokyo Lottery Ticket</h1>
+        <p>Scratch the field to bring your number into focus.</p>
+      </div>
+
+      <div class="field">
+        <div class="reveal" aria-live="polite">
+          <span class="lbl">Lottery number</span>
+          <span class="number" id="number">0000</span>
+          <span class="dot"></span>
+        </div>
+        <canvas class="scratch" id="scratch" tabindex="0" aria-label="Skrapfält. Dra med fingret eller musen för att skrapa. Tryck Enter för att visa numret."></canvas>
+        <div class="af" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+      </div>
+
+      <p class="status" id="status">Drag across the field with your finger or mouse.</p>
+    </div>
+
+    <div class="perf" aria-hidden="true"></div>
+
+    <div class="stub">
+      <dl>
+        <dt>Sale</dt><dd>XF56mmF1.2 R WR</dd>
+        <dt>Registered</dt><dd>14 Nov 2026</dd>
+        <dt>Draw</dt><dd>Friday 5 March 2027</dd>
+      </dl>
+      <div class="count"><b>12</b><span>tickets</span></div>
+      <div class="meter" id="meter" aria-hidden="true"></div>
+      <p class="goal">13 more tickets and you get FOOL Magazine Japan.</p>
+    </div>
+    <p class="fine">Open to employed sales staff at Scandinavian Photo. Four winners join FUJIFILM on an educational trip to Tokyo.</p>
+  </article>
+  </div>
+
+  <div class="sketch">
+    <button type="button" id="again">Ny lott</button>
+    <span>Skiss · exempeldata · numret slumpas i webbläsaren</span>
+  </div>
+</main>
+<script src="scratch.js?v=1"></script>
+</body>
+</html>
