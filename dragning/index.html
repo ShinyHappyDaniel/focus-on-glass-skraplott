@@ -8,34 +8,29 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fjalla+One&family=Noto+Sans:wght@400;700&display=swap">
-<link rel="stylesheet" href="styles.css?v=1">
+<link rel="stylesheet" href="styles.css?v=2">
 </head>
 <body>
-<canvas id="fx" aria-hidden="true"></canvas>
-<div class="wrap">
-  <header>
+<div class="screen" id="screen">
+  <canvas class="view" id="view" aria-label="Dragning: bländaren stänger och vinnarnumret blir skarpt"></canvas>
+
+  <div class="logos">
     <img class="ff" src="assets/fujifilm-logo-white-red.svg" alt="FUJIFILM">
     <img class="fog" src="assets/focus-on-glass-white.svg" alt="Focus on Glass">
-    <h1>Tokyo Lottery – Draw</h1>
-    <p>Friday 5 March 2027. Four winners join FUJIFILM on an educational trip to Tokyo.</p>
-  </header>
-
-  <div class="stage" id="stage">
-    <div class="scene" id="s-iris">
-      <canvas class="view" id="c-iris"></canvas>
-      <div class="idle">Ready for draw</div>
-      <div class="caption"><span class="tag"></span><div class="who"></div><div class="where"></div></div>
-    </div>
   </div>
 
   <div class="controls">
     <button type="button" id="drawBtn">Dra vinnare 1 av 4</button>
     <button type="button" id="resetBtn">Börja om</button>
+    <button type="button" id="fsBtn">Helskärm</button>
   </div>
 
-  <div class="winners" id="winners" aria-live="polite"></div>
-  <p class="note">Skiss · exempeldata. Vinnarna dras i förväg på servern – animationen visar bara resultatet.</p>
+  <div class="idle" id="idle">Ready for draw</div>
+  <div class="caption" id="caption" aria-live="polite"><span class="tag"></span><div class="who"></div><div class="where"></div></div>
+
+  <div class="band" id="band"></div>
 </div>
-<script src="draw.js?v=1"></script>
+<canvas id="fx" aria-hidden="true"></canvas>
+<script src="draw.js?v=2"></script>
 </body>
 </html>

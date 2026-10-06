@@ -1,58 +1,61 @@
-# Focus on Glass – digital lottdragning ("Bländaren")
+# Focus on Glass – digital lottdragning, fullskärm ("Bländaren")
 
-Skiss på den digitala dragningen till Fujifilms säljkampanj **Focus on Glass** (Tokyo Lottery). Dragningen sker fredag 5 mars 2027 och fyra vinnare följer med FUJIFILM på en utbildningsresa till Tokyo. Den hör ihop med den digitala skraplotten (paketet `focus-on-glass-skraplott`), där säljaren skrapar fram sitt fyrsiffriga lottnummer.
+Fullskärmsversion av dragningen till Fujifilms säljkampanj **Focus on Glass** (Tokyo Lottery, fyra vinnare, dragning fredag 5 mars 2027). Tänkt att visas på storbild eller i en livesändning. Hör ihop med den digitala skraplotten (paketet `focus-on-glass-skraplott`), där säljaren skrapar fram sitt fyrsiffriga lottnummer.
 
-Konceptet: lottnumren driver förbi som suddiga ljuspunkter. En bländare drar ihop sig och ett nummer blir skarpt – samma idé som "Scratch to focus" på lotten.
+Konceptet: lottnumren driver förbi som suddiga ljuspunkter. En bländare stänger steg för steg, autofokus letar och låser till sist på vinnarnumret – samma idé som "Scratch to focus" på lotten.
 
-Prototyp i ren HTML/CSS/JS, utan byggsteg och beroenden. Öppna `index.html` i en webbläsare.
+Prototyp i ren HTML/CSS/JS, utan byggsteg och beroenden. Öppna `index.html` i en webbläsare och klicka "Helskärm".
 
 ## Grundprincip: animationen visar bara resultatet
 
-Vinnarna dras **i förväg på servern** och är låsta innan dragningen visas. Animationen avgör ingenting. I prototypen ligger resultatet hårdkodat i `WINNERS` överst i `draw.js`. I produktion ska det hämtas från servern (t.ex. ett endpoint som returnerar de fyra vinnarna i ordning), och dragningen ska vara loggad så att den går att granska.
+Vinnarna dras **i förväg på servern** och är låsta innan dragningen visas. Animationen avgör ingenting. I prototypen ligger resultatet hårdkodat i `WINNERS` överst i `draw.js`. I produktion hämtas det från servern, och dragningen loggas så att den går att granska.
 
 ## Filer
 
 | Fil | Innehåll |
 | --- | --- |
-| `index.html` | Sidan: logotyper, rubrik, scen 16:9, knappar, vinnarlista |
-| `styles.css` | All styling. Färger och typsnitt som CSS-variabler i `:root` |
-| `draw.js` | Vinnardata, bländaranimationen (canvas), fyrverkerier, knapplogik |
-| `assets/fujifilm-logo-white-red.svg` | FUJIFILM-logotyp, vit med röd i-prick. Endast på svart/mörk botten |
+| `index.html` | Sidan: canvas, logotyper, knappar, vinnartext, vinnarbård |
+| `styles.css` | All styling. Färger, typsnitt och bårdens höjd som CSS-variabler i `:root` |
+| `draw.js` | Vinnardata, tidslinje (`T`), bländaren, fyrverkerier, knapplogik |
+| `assets/fujifilm-logo-white-red.svg` | FUJIFILM-logotyp, vit med röd i-prick. Endast på mörk botten |
 | `assets/focus-on-glass-white.svg` | Kampanjlogga Focus on Glass, vit, utan "Untold Stories"-etiketten |
-| `preview/` | Skärmdumpar: före dragning, första vinnaren, alla fyra dragna |
+| `preview/` | Fem stillbilder ur sekvensen: vila, fart, bländaren stänger, fokusjakt, vinnare |
 
-## Design
+## Layout
 
-- **Sida:** neutral grå `#6b6b6b`. Överst FUJIFILM-logga, Focus on Glass-logga, rubriken "Tokyo Lottery – Draw" och en rad om dragningen.
-- **Scen:** svart, 16:9, full bredd upp till 960 px – tänkt att fungera som skärm vid livesändning (Teams/butiksskärm).
-- **Accent:** Fujifilm Communication Red `#fb0020` för fokushörn, vinnaretikett och nummer i vinnarlistan.
-- **Typsnitt:** Fjalla One (rubriker, nummer, namn) och Noto Sans (brödtext), från Google Fonts. Fjalla One har bara en vikt – lägg aldrig på fetstil.
-- **Vinnarlista:** fyra platser under scenen. Ej dragna visas som "····" i grått. Dragna visas med nummer i rött, namn och butik.
+- **Bilden fyller hela skärmen** (canvas), utom bården längst ner.
+- **Logotyper:** FUJIFILM och Focus on Glass, små och centrerade högst upp.
+- **Meny uppe till höger** som på en webbsida: liten vit text (Noto Sans 12 px) utan ramar eller bakgrund – "Dra vinnare N av 4", "Börja om", "Helskärm" (döljs om webbläsaren saknar stöd). Röd understrykning vid hovring. På smal skärm (≤ 640 px) ligger menyn centrerad strax ovanför bården.
+- **Vinnartext** centrerad nedtill på bilden: röd etikett "WINNER N · TICKET NNNN", namnet stort i Fjalla One, "Scandinavian Photo [butik]".
+- **Vinnarbård** längst ner, svart, höjd `clamp(104px, 17vh, 168px)`: fyra fält (två × två på smal skärm). Ej dragna visas som "····". En nydragen vinnare blinkar till i rött.
+- **Färger:** svart, vit, Fujifilm Communication Red `#fb0020` som accent. **Typsnitt:** Fjalla One och Noto Sans från Google Fonts.
 
-## Animationen, steg för steg (per vinnare)
+## Bländaren
 
-1. **Viloläge:** mörkblå bakgrund med 34 ljuspunkter (bokeh) och 26 suddiga lottnummer (blur 5 px) som driver långsamt i sidled. Text uppe till vänster: "Ready for draw".
-2. **Klick på "Dra vinnare N av 4":** knappen låses.
-3. **0–2,2 s:** bländaren (9 lameller) stänger från utanför bild till en öppning med radie 30 % av scenens kortsida, och vrider sig samtidigt. Ljuspunkter och nummer accelererar och bromsar in.
-4. **1,3–2,6 s:** vinnarnumret tonas in i mitten och går från oskarpt (blur 18 px) till skarpt. Övriga nummer tonas ner.
-5. **När numret är skarpt:** röda fokushörn låser runt numret.
-6. **Ca 2,7 s:** texten visas under scenens mitt: röd etikett "WINNER N · TICKET NNNN", namnet och "Scandinavian Photo [butik]". Fyrverkerier (tre explosioner) och konfetti över sidan. Vinnaren läggs in i listan och knappen låses upp för nästa.
-7. Efter fyra vinnare: knappen visar "Alla fyra dragna". "Börja om" nollställer.
+Nio böjda lameller. Varje lamell är ytan utanför en förskjuten cirkel (lamellens skärkant) inom ett spiralformat område, så öppningen blir en rundad niohörning som i ett riktigt objektiv och lamellerna överlappar som en spiral. Varje lamell har egen ljussättning efter vinkeln mot ett tänkt ljus uppe till vänster, satinglans, en ljus fas på skärkanten, ljus kant och mjuk skugga längs överlappet, samt vinjettering mot bildkanten.
 
-`prefers-reduced-motion` hoppar direkt till slutläget och stänger av fyrverkerierna.
+## Sekvensen per vinnare (ca 11,4 s, ställs i `T` i `draw.js`)
+
+1. **Fart, 2,6 s:** bländaren är helt öppen. Ljuspunkter och suddiga nummer accelererar.
+2. **Bländaren stänger, 4,8 s:** stänger i fem klick från f/1.4 till f/8, med f-värdet utskrivet under öppningen. I mitten fladdrar suddiga slumpnummer, först snabbt och sedan allt långsammare. Det sista är vinnarnumret, fortfarande oskarpt.
+3. **Fokusjakt, 3,4 s:** skärpan pendlar fram och tillbaka (oskärpa 20 → 12 → 17 → 9 → 14 → 6 → 10 → 0 px) medan vita fokushörn blinkar. Numret går inte att läsa förrän i slutet.
+4. **Lås, 0,6 s:** fokushörnen blir röda och numret är skarpt.
+5. **Vinnaren:** texten tonas in, vinnaren läggs i bården och fyrverkerier (fem explosioner) och konfetti går av.
+
+`prefers-reduced-motion` hoppar direkt till slutläget utan fyrverkerier. Om bilduppdateringen hackar slutförs dragningen ändå via en säkerhetstimer.
 
 ## Exempeldata (byts mot riktiga data)
 
 - `WINNERS` i `draw.js`: Maria Sjöberg (4827, Stockholm), Johan Ek (0391, Göteborg), Sara Holm (7714, Malmö), Erik Nyberg (2265, Uppsala). Påhittade namn.
-- `POOL`: 60 slumpade nummer som bara används som dekor i bakgrunden. I produktion kan de gärna vara riktiga utdelade lottnummer.
-- Raden "Skiss · exempeldata …" ska bort i produktion.
+- `POOL`: 60 slumpade nummer som bara används som dekor. I produktion kan de gärna vara riktiga utdelade lottnummer.
 
 ## Inför produktion
 
 - Hämta vinnarna från servern. Klienten får aldrig slumpa fram vinnare.
-- Bestäm hur dragningen körs: live av en presentatör (knappen) eller automatiskt med paus mellan vinnarna.
-- Visa bara förnamn + efternamn + butik om det är godkänt ur integritetssynpunkt.
+- Bestäm om presentatören klickar fram varje vinnare (som nu) eller om dragningen går automatiskt med paus mellan vinnarna.
+- Visa bara namn och butik om det är godkänt ur integritetssynpunkt.
 - Kontrollera med Fujifilm vilka regler som gäller för tävlingen och dragningen.
+- Testa på den dator och skärm som ska användas vid sändningen. Allt ritas på canvas och kräver en vanlig modern webbläsare.
 
 ## Varumärkesregler
 
